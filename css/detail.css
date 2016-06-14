@@ -1,0 +1,57 @@
+/*
+banner的比例暂定为750X560
+*/
+html,body,div,p,a,span,img{
+    margin:0;
+    padding:0;
+}
+ul,li{
+    list-style:none;
+    padding:0;
+    margin: 0;
+}
+.banner{
+    position: relative;
+    overflow: hidden;
+    min-height: 40px;
+}
+.banner-list{
+    -webkit-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
+}
+.banner-list:after{
+    content: '';
+    display: block;
+    width:0;
+    clear: both;
+    line-height:0;
+}
+.banner-item{
+    float: left;
+}
+.banner-item > img{
+    display: block;
+    width:100%;
+}
+.banner-navs{
+    position: absolute;
+    bottom:10px;
+    left:0;
+    width:100%;
+    text-align: center;
+}
+.banner-nav{
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-left:5px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.6);
+}
+.banner-navs .banner-nav:first-child{
+    margin-left:0;
+}
+.banner-nav.active{
+    background-color: #fff;
+}

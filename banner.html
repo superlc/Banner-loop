@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale = 1.0,user-scalable=no" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <title>兑换详情页</title>
+        <link rel="stylesheet" href="css/detail.css">
+    </head>
+    <body>
+        <div class="main">
+            <!--轮播图-->
+            <!--
+            <div class="banner" id="banner">
+                <div class="banner-list">
+                    <div class="banner-item">
+                        <img src="img/banner-default.png" alt="" data-url="">
+                    </div>
+                    <div class="banner-item">
+                        <img src="img/banner-default.png" alt="" data-url="">
+                    </div>
+                    <div class="banner-item">
+                        <img src="img/banner-default.png" alt="" data-url="">
+                    </div>
+                </div>
+                <p class="banner-navs"><a href="" class="banner-nav active"></a><a href="" class="banner-nav"></a><a href="" class="banner-nav"></a></p>
+            </div>
+            -->
+            <div id="banner" class="banner">
+                <div class="banner-list"></div>
+                <p class="banner-navs"></p>
+            </div>
+        </div>
+        <script src="./js/lib/sea.js"></script>
+        <script>
+            seajs.config({
+                base : 'js',
+                alias: {
+                    //普通路径，相对于当前页面
+                    'Hammer': './lib/hammer.min.js',
+                    'Zepto':'./lib/zepto.js',
+                    'Banner':'./banner.js'
+                }
+            });
+            seajs.use('./js/index.js');
+        </script>
+    </body>
+</html>
