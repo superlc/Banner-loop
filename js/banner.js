@@ -2,6 +2,9 @@
  * banner模块
  * */
 define(function (require,module,exports) {
+    function getStyle(dom) {
+        return window.getComputedStyle(null,dom);
+    }
     /**
      * Banner的构造函数
      * */
@@ -9,20 +12,9 @@ define(function (require,module,exports) {
         //需要的参数
         var ops = {
             //默认图的地址
-            defaultImg : '../images/banner-default.png',
+            defaultImg : 'img/banner-default.png',
             //轮播图的地址
-            images : [
-                /*
-                {
-                    //图片地址
-                    url : 'xxx',
-                    //跳转链接
-                    href : 'xxx'
-                    //图片描述
-                    description : ''
-                }
-                * */
-            ],
+            images : [],
             //是否自动轮播
             autoPlay : true,
             //是否回弹
@@ -74,18 +66,21 @@ define(function (require,module,exports) {
             var imgCount = _this.options.images.length;
 
             //设置banner
+            //_this.el.css('height',bannerHeight);
             _this.el.style.height = bannerHeight + 'px';
+            //bannerList.css('width',_this.options.width * imgCount);
             bannerList.style.width = _this.options.width * imgCount + 'px';
             //填充dom
             var listHtml = '',
                 navHtml = '';
 
             for(var i = 0 ; i < imgCount ; i++){
-                listHtml += '<div data-href="' + _this.options.images[i].href + '" class="banner-item" style="width: ' + _this.options.width + 'px" >'
-                            + '<img src="' + _this.options.defaultImg + '"  data-url="' + _this.options.images[i].url + '" style="height: ' + bannerHeight + 'px" />'
+                listHtml += '<div class="banner-item" style="width: ' + _this.options.width + 'px" >'
+                            + '<img src="' + _this.options.defaultImg + '"  data-url="' + _this.options.images[i] + '" style="height: ' + bannerHeight + 'px" />'
                             + '</div>';
                 navHtml += i == 0 ? '<a class="banner-nav active"></a>' : '<a href="" class="banner-nav"></a>';
             }
+            console.log(navHtml);
             //填充HTML到banner的容器中
             //bannerList.append(listHtml);
             bannerList.innerHTML = listHtml;
@@ -96,39 +91,42 @@ define(function (require,module,exports) {
                 navList.innerHTML = navHtml;
                 //添加滑动事件处理
                 var dom = _this.el;
-                var Hammer = require('Hammer');
-                var hammer = new Hammer(dom);
-                hammer.on('swipe',function (e) {
-                    if(_this.options.timer){
-                        clearInterval(_this.options.timer);
-                    }
-                    //如果正在动画中则不处理滑动事件
-                    if(_this.options.isMoving){
-                        return;
-                    }
-                    //监听banner上的swipe事件
-                    var _index = _this.options.index;
+                //异步加载手势库
+                require.async('Hammer',function(Hammer){
+                    var hammer = new Hammer(dom);
+                    hammer.on('swipe',function (e) {
+                        if(_this.options.timer){
+                            clearInterval(_this.options.timer);
+                        }
+                        //如果正在动画中则不处理滑动事件
+                        if(_this.options.isMoving){
+                            return;
+                        }
+                        //监听banner上的swipe事件
+                        var _index = _this.options.index;
 
-                    if(e.deltaX > _this.options.delta){
-                        //向右滑动，当已经是第一张图时不处理
-                        if(_index <= 1){
-                            return;
-                        }else{
-                            _index--;
+                        if(e.deltaX > _this.options.delta){
+                            //向右滑动，当已经是第一张图时不处理
+                            if(_index <= 1){
+                                return;
+                            }else{
+                                _index--;
+                            }
                         }
-                    }
-                    if(e.deltaX < -1 * _this.options.delta){
-                        //向左滑动
-                        if(_index + 1 > _this.options.maxim){
-                            return;
-                        }else{
-                            _index++;
+                        if(e.deltaX < -1 * _this.options.delta){
+                            //向左滑动
+                            if(_index + 1 > _this.options.maxim){
+                                return;
+                            }else{
+                                _index++;
+                            }
                         }
-                    }
-                    //切换状态
-                    _this.options.index = _index;
-                    _this.loop(_index);
+                        //切换状态
+                        _this.options.index = _index;
+                        _this.loop(_index);
+                    });
                 });
+                
             }else{
                 //navList.css('display','none');
                 navList.style.display = 'none';
@@ -144,6 +142,10 @@ define(function (require,module,exports) {
             //ops.isMoving = true;
 
             //容器移动
+            /*
+            wrapper.css('webkit-transform','translateX(' + (1-index)*ops.width + 'px)');
+            wrapper.css('transform','translateX(' + (1-index)*ops.width + 'px)');
+            */
             this.setCSS3(wrapper,'transform','translateX(' + (1-index)*ops.width + 'px)')
 
             //切换nav
@@ -188,7 +190,7 @@ define(function (require,module,exports) {
         //自动播放轮播图
         autoPlay : function (flag) {
             var _this = this;
-            if(flag && _this.options.maxim > 1){
+            if(flag){
                 _this.options.timer = setInterval(function () {
                     var nextIndex = (_this.options.index + 1) % _this.options.maxim;
                     _this.options.index =  nextIndex > 0 ? nextIndex : _this.options.maxim;
